@@ -1,4 +1,5 @@
 ﻿using System;
+using Autofac;
 
 namespace TicTacToeConsoleUI
 {
@@ -6,7 +7,13 @@ namespace TicTacToeConsoleUI
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var container = ContainerConfig.Configure();
+
+            using var scope = container.BeginLifetimeScope();
+            var app = scope.Resolve<IApplication>();
+            app.Run();
+
+            Console.ReadKey();
         }
     }
 }
