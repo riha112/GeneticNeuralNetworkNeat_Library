@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[Connection]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
+	[FromId] INT NOT NULL,
+	[ToId] INT NOT NULL,
+	[Weight] DECIMAL(18,17) DEFAULT 1,
+	[InnovationId] INT NOT NULL,
+    [Enabled] BIT NOT NULL DEFAULT 1
+)

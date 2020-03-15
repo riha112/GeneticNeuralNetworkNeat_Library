@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[Node]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
+	[NetworkId] INT NOT NULL,
+	[InnovationId] INT NOT NULL
+)
