@@ -6,38 +6,62 @@ using DataManager.Utilities;
 
 namespace DataManager.Processors
 {
-    public class BatchProcessor
+    /// <summary>
+    /// Interacts with "batch" table/model stored data in DB.
+    /// </summary>
+    public class BatchProcessor : IBatchProcessor
     {
         private readonly ISqlDataAccess _sqlDataAccess;
+        private readonly INetworkProcessor _networkProcessor;
+        private readonly IInnovationProcessor _innovationProcessor;
 
-        public BatchProcessor(ISqlDataAccess sqlDataAccess) =>
-            _sqlDataAccess = sqlDataAccess;
+        public BatchProcessor(ISqlDataAccess sqlDataAccess, INetworkProcessor networkProcessor, IInnovationProcessor innovationProcessor) =>
+            (_sqlDataAccess, _networkProcessor, _innovationProcessor) = (sqlDataAccess, networkProcessor, innovationProcessor);
 
         public BatchModel Load(int id)
         {
-            const string sql = "SELECT * FROM [dbo].[Batch] WHERE Id=@Id";
-            var batch = _sqlDataAccess.LoadDataWith<BatchModel>(sql, new {Id = id});
+            const string sql = "SELECT * FROM [dbo].[Batch] WHERE [Id]=@Id";
+            var batches = _sqlDataAccess.LoadDataWith<BatchModel>(sql, new {Id = id});
 
             // Element not found
-            if (batch.Count == 0)
+            if (batches.Count == 0)
                 throw new Exception($"{nameof(BatchModel)} with {nameof(id)}: {id} not found");
 
-            return batch[0];
+            var batch = batches[0];
+            batch.Networks = _networkProcessor.LoadLinked(batch.Id);
+            batch.Innovations = _innovationProcessor.LoadLinked(batch.Id);
+
+            return batches[0];
         }
 
-        public void Save(BatchModel batchModel)
+        public void Save(ref BatchModel batchModel)
         {
-            throw new NotImplementedException();
+            const string sql = "INSERT INTO [dbo].[Batch] (Name, Description, Generation) Values (@Name, @Description, @Generation)";
+            try
+            {
+                var output = _sqlDataAccess.SaveData<BatchModel>(batchModel, sql);
+                batchModel.Id = output;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
-        public void Delete(BatchModel batchModel)
+        public void Delete(int batchId)
         {
-            throw new NotImplementedException();
+            const string sql = "DELETE FROM [dbo].[Batch] WHERE [Id]=@Id";
+            _sqlDataAccess.DeleteData(sql, new { Id = batchId });
         }
 
         public void Update(BatchModel batchModel)
         {
-            throw new NotImplementedException();
+            const string sql = @"UPDATE [dbo].[Batch] WHERE 
+                                [Id]=@Id, 
+                                [Name]=@FromId, 
+                                [Description]=@Description,
+                                [Generation]=@Generation";
+            _sqlDataAccess.UpdateData(sql, batchModel);
         }
     }
 }

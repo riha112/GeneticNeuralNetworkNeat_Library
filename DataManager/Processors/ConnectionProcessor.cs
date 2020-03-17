@@ -5,11 +5,11 @@ using DataManager.Models;
 using DataManager.Utilities;
 
 namespace DataManager.Processors
-{   
+{
     /// <summary>
     /// Interacts with "connection" table/model stored data in DB.
     /// </summary>
-    public class ConnectionProcessor
+    public class ConnectionProcessor : IConnectionProcessor
     {
         private readonly ISqlDataAccess _sqlDataAccess;
 
@@ -18,29 +18,53 @@ namespace DataManager.Processors
 
         public ConnectionModel Load(int id)
         {
-            const string sql = "SELECT * FROM [dbo].[Connection] WHERE Id=@Id";
-            var batch = _sqlDataAccess.LoadDataWith<ConnectionModel>(sql, new { Id = id });
+            const string sql = "SELECT * FROM [dbo].[Connection] WHERE [Id]=@Id";
+            var connections = _sqlDataAccess.LoadDataWith<ConnectionModel>(sql, new { Id = id });
 
             // Element not found
-            if (batch.Count == 0)
+            if (connections.Count == 0)
                 throw new Exception($"{nameof(ConnectionModel)} with {nameof(id)}: {id} not found");
 
-            return batch[0];
+            return connections[0];
         }
 
-        public void Save(ConnectionModel connectionModel)
+        public List<ConnectionModel> LoadLinked(int networkId)
         {
-            throw new NotImplementedException();
+            const string sql = "SELECT * FROM [dbo].[Connection] WHERE [NetworkId]=@NetworkId";
+            return _sqlDataAccess.LoadDataWith<ConnectionModel>(sql, new { NetworkId = networkId });
         }
 
-        public void Delete(ConnectionModel connectionModel)
+        public void Save(ref ConnectionModel connectionModel)
         {
-            throw new NotImplementedException();
+            const string sql = "INSERT INTO [dbo].[Connection] (FromId, ToId, Weight, InnovationId, NetworkId) Values (@FromId, @ToId, @Weight, @InnovationId, @NetworkId)";
+            try
+            {
+                var output = _sqlDataAccess.SaveData<ConnectionModel>(connectionModel, sql);
+                connectionModel.Id = output;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void Delete(int connectionId)
+        {
+            const string sql = "DELETE FROM [dbo].[Connection] WHERE [Id]=@Id";
+            _sqlDataAccess.DeleteData(sql, new { Id = connectionId });
         }
 
         public void Update(ConnectionModel connectionModel)
         {
-            throw new NotImplementedException();
+            const string sql = @"UPDATE [dbo].[Connection] WHERE 
+                                [Id]=@Id, 
+                                [FromId]=@FromId, 
+                                [ToId]=@ToId,
+                                [Weight]=@Weight, 
+                                [InnovationId]=@InnovationId, 
+                                [NetworkId]=@NetworkId, 
+                                [Enabled]=@Enabled";
+            _sqlDataAccess.UpdateData(sql, connectionModel);
         }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Linq;
-using System.Text;
 using Dapper;
 
 namespace DataManager.Utilities
 {
     public class SqlDataAccess : ISqlDataAccess
     {
-        private static string ConnectionString => "";
+        // TODO: Replace with DI supported expression
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["GNNDB"].ConnectionString;
 
         public List<T> LoadData<T>(string sql)
         {
@@ -18,28 +19,38 @@ namespace DataManager.Utilities
             return output.ToList();
         }
 
-        public List<T> LoadDataWith<T>(string sql, object data)
+        public List<T> LoadDataWith<T>(string sql, object parameters)
         {
             using IDbConnection cnn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
-            var output = cnn.Query<T>(sql, data);
+            var output = cnn.Query<T>(sql, parameters);
             return output.ToList();
         }
 
-        public void SaveData<T>(T savable, string sql)
+        public int SaveData<T>(T savable, string sql)
         {
             using IDbConnection cnn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
-            cnn.Execute(sql, savable);
+            var output = cnn.Execute(sql, savable);
+            return output;
         }
 
-        public void UpdateData<T>(T updatable, string sql)
+        public void UpdateData(string sql, object parameters)
         {
             using IDbConnection cnn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
-            cnn.Execute(sql, updatable);
+            cnn.Execute(sql, parameters);
         }
 
-        public void DeleteData<T>(T deletable, string sql)
+        public void DeleteData(string sql, object parameters)
         {
-
+            using IDbConnection cnn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
+            cnn.Execute(sql, parameters);
         }
+
+        public List<TO> MapOf3<T1, T2, T3, TO>(string sql, object parameters, Func<T1, T2, T3, TO> map, string splitOn)
+        {
+            using IDbConnection cnn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
+            var output = cnn.Query<T1, T2, T3, TO>(sql, map, parameters, splitOn: splitOn);
+            return output.ToList();
+        }
+
     }
 }

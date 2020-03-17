@@ -9,7 +9,7 @@ namespace DataManager.Processors
     /// <summary>
     /// Interacts with "node" table/model stored data in DB.
     /// </summary>
-    public class NodeProcessor
+    public class NodeProcessor : INodeProcessor
     {
         private readonly ISqlDataAccess _sqlDataAccess;
 
@@ -18,29 +18,49 @@ namespace DataManager.Processors
 
         public NodeModel Load(int id)
         {
-            const string sql = "SELECT * FROM [dbo].[Connection] WHERE Id=@Id";
-            var batch = _sqlDataAccess.LoadDataWith<NodeModel>(sql, new { Id = id });
+            const string sql = "SELECT * FROM [dbo].[Node] WHERE [Id]=@Id";
+            var nodes = _sqlDataAccess.LoadDataWith<NodeModel>(sql, new { Id = id });
 
             // Element not found
-            if (batch.Count == 0)
+            if (nodes.Count == 0)
                 throw new Exception($"{nameof(NodeModel)} with {nameof(id)}: {id} not found");
 
-            return batch[0];
+            return nodes[0];
         }
 
-        public void Save(NodeModel nodeModel)
+        public List<NodeModel> LoadLinked(int networkId)
         {
-            throw new NotImplementedException();
+            const string sql = "SELECT * FROM [dbo].[Node] WHERE [NetworkId]=@NetworkId";
+            return _sqlDataAccess.LoadDataWith<NodeModel>(sql, new {NetworkId = networkId});
         }
 
-        public void Delete(NodeModel nodeModel)
+        public void Save(ref NodeModel nodeModel)
         {
-            throw new NotImplementedException();
+            const string sql = "INSERT INTO [dbo].[NODE] (NetworkId, InnovationId) Values (@NetworkId, @InnovationId)";
+            try
+            {
+                var output = _sqlDataAccess.SaveData<NodeModel>(nodeModel, sql);
+                nodeModel.Id = output;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void Delete(int nodeId)
+        {
+            const string sql = "DELETE FROM [dbo].[Node] WHERE [Id]=@Id";
+            _sqlDataAccess.DeleteData(sql, new { Id = nodeId });
         }
 
         public void Update(NodeModel nodeModel)
         {
-            throw new NotImplementedException();
+            const string sql =@"UPDATE [dbo].[Node] WHERE 
+                                [Id]=@Id, 
+                                [NetworkId]=@NetworkId, 
+                                [InnovationId]=@InnovationId";
+            _sqlDataAccess.UpdateData(sql, nodeModel);
         }
     }
 }
