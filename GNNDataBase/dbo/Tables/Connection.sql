@@ -7,16 +7,6 @@
 	[InnovationId] INT NOT NULL,
     [NetworkId] INT NOT NULL,
     [Enabled] BIT NOT NULL DEFAULT 1,
-
-	CONSTRAINT conn_innov
-	FOREIGN KEY ([InnovationId])
-	REFERENCES Innovation (Id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-
-	CONSTRAINT conn_net
-	FOREIGN KEY ([NetworkId])
-	REFERENCES NET (Id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
+	CONSTRAINT [FK_Conn_Net] FOREIGN KEY ([NetworkId]) REFERENCES [NET]([Id]), 
+    CONSTRAINT [FK_Conn_Innov] FOREIGN KEY ([InnovationId]) REFERENCES [Innovation]([Id]),
 )

@@ -2,17 +2,7 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY,
 	[NetworkId] INT NOT NULL,
-	[InnovationId] INT NOT NULL,
-
-	CONSTRAINT node_innov
-	FOREIGN KEY ([InnovationId])
-	REFERENCES Innovation (Id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE,
-
-	CONSTRAINT node_net
-	FOREIGN KEY ([NetworkId])
-	REFERENCES NET (Id)
-	ON DELETE CASCADE
-	ON UPDATE CASCADE
+	[InnovationId] INT NOT NULL, 
+    CONSTRAINT [FK_Node_Net] FOREIGN KEY ([NetworkId]) REFERENCES [NET]([Id]), 
+    CONSTRAINT [FK_Node_Innov] FOREIGN KEY ([InnovationId]) REFERENCES [Innovation]([Id]),
 )
