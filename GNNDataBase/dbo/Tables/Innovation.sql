@@ -6,4 +6,10 @@
     [Type] TINYINT NOT NULL DEFAULT 0,
 	[BatchId] INT NOT NULL,
 	[CreationDate] DATETIME2 NOT NULL DEFAULT getutcdate(), 
+
+	CONSTRAINT batch_innov
+	FOREIGN KEY (BatchId)
+	REFERENCES Batch (Id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 )

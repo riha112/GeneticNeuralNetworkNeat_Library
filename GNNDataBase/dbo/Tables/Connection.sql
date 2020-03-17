@@ -5,5 +5,18 @@
 	[ToId] INT NOT NULL,
 	[Weight] DECIMAL(18,17) DEFAULT 1,
 	[InnovationId] INT NOT NULL,
-    [Enabled] BIT NOT NULL DEFAULT 1
+    [NetworkId] INT NOT NULL,
+    [Enabled] BIT NOT NULL DEFAULT 1,
+
+	CONSTRAINT conn_innov
+	FOREIGN KEY ([InnovationId])
+	REFERENCES Innovation (Id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE,
+
+	CONSTRAINT conn_net
+	FOREIGN KEY ([NetworkId])
+	REFERENCES NET (Id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 )

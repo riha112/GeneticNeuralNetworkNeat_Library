@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PublishLocations\GNNDataBase.publish.xml" />
+    <None Include="PublishLocations\GNNDataBaseLocalhost.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Batch.sql" />
@@ -71,5 +72,6 @@
     <Build Include="dbo\Tables\Node.sql" />
     <Build Include="dbo\Tables\Connection.sql" />
     <Build Include="dbo\Tables\Innovation.sql" />
+    <Build Include="dbo\Stored Procedures\GetInnovation.sql" />
   </ItemGroup>
 </Project>

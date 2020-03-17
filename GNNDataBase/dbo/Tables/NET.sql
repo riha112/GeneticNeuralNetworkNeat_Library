@@ -4,4 +4,10 @@
     [FitnessScore] DECIMAL(18, 9) NOT NULL DEFAULT 0,
 	[BirthGeneration] INT NOT NULL DEFAULT 0,
 	[BatchId] INT NOT NULL,
+
+	CONSTRAINT batch_net
+	FOREIGN KEY (BatchId)
+	REFERENCES Batch (Id)
+	ON DELETE CASCADE
+	ON UPDATE CASCADE
 )
