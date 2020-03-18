@@ -9,6 +9,7 @@ namespace DataManager.Models
         public int Id { get; set; }
         public double FitnessScore { get; set; }
         public int BirthGeneration { get; set; }
+        public int BatchId { get; set; }
 
         public List<NodeModel> Nodes { get; set; } = new List<NodeModel>();
         public List<ConnectionModel> Connections { get; set; } = new List<ConnectionModel>();

@@ -15,6 +15,8 @@ namespace DataManager.Models
         public int Id { get; set; }
         public int NodeFromId { get; set; }
         public int NodeToId { get; set; }
+        public int BatchId { get; set; }
+
         public InnovationType Type { get; set; }
         public DateTime CreationDate { get; set; }
     }
