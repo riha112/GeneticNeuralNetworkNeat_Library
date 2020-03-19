@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using DataManager.Models;
 using DataManager.Utilities;
@@ -37,8 +38,8 @@ namespace DataManager.Processors
                 Type = type,
                 From = from,
                 To = to,
-                Bactch = batchId
-            });
+                Batch = batchId
+            }, CommandType.StoredProcedure);
 
             // Element not found
             if (innovations.Count == 0)
@@ -55,7 +56,9 @@ namespace DataManager.Processors
 
         public void Save(ref InnovationModel innovationModel)
         {
-            const string sql = "INSERT INTO [dbo].[Innovation] (NodeFromId, NodeToId, Type, BatchId) Values (@NodeFromId, @NodeToId, @Type, @BatchId)";
+            const string sql = @"INSERT INTO [dbo].[Innovation] (NodeFromId, NodeToId, Type, BatchId) 
+                                 Values (@NodeFromId, @NodeToId, @Type, @BatchId);
+                                 SELECT CAST(SCOPE_IDENTITY() as int)";
             try
             {
                 var output = _sqlDataAccess.SaveData<InnovationModel>(innovationModel, sql);
@@ -75,11 +78,12 @@ namespace DataManager.Processors
 
         public void Update(InnovationModel innovationModel)
         {
-            const string sql = @"UPDATE [dbo].[Innovation] WHERE 
+            const string sql = @"UPDATE [dbo].[Innovation] SET 
                                 [NodeFromId]=@NodeFromId, 
                                 [NodeToId]=@NodeToId, 
                                 [Type]=@Type,
-                                [BatchId]=@BatchId";
+                                [BatchId]=@BatchId
+                                WHERE [Id]=@Id";
             _sqlDataAccess.UpdateData(sql, innovationModel);
         }
     }

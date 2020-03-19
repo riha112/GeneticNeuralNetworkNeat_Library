@@ -18,7 +18,7 @@ namespace DataManager.Processors
 
         public ConnectionModel Load(int id)
         {
-            const string sql = "SELECT * FROM [dbo].[Connection] WHERE [Id]=@Id";
+            const string sql = "SELECT * FROM [dbo].[Connection] WHERE [Id]=@Id ORDER BY [InnovationId]";
             var connections = _sqlDataAccess.LoadDataWith<ConnectionModel>(sql, new { Id = id });
 
             // Element not found
@@ -30,13 +30,15 @@ namespace DataManager.Processors
 
         public List<ConnectionModel> LoadLinked(int networkId)
         {
-            const string sql = "SELECT * FROM [dbo].[Connection] WHERE [NetworkId]=@NetworkId";
+            const string sql = "SELECT * FROM [dbo].[Connection] WHERE [NetworkId]=@NetworkId ORDER BY [InnovationId]";
             return _sqlDataAccess.LoadDataWith<ConnectionModel>(sql, new { NetworkId = networkId });
         }
 
         public void Save(ref ConnectionModel connectionModel)
         {
-            const string sql = "INSERT INTO [dbo].[Connection] (FromId, ToId, Weight, InnovationId, NetworkId) Values (@FromId, @ToId, @Weight, @InnovationId, @NetworkId)";
+            const string sql = @"INSERT INTO [dbo].[Connection] (FromId, ToId, Weight, InnovationId, NetworkId) 
+                                 Values (@FromId, @ToId, @Weight, @InnovationId, @NetworkId);
+                                 SELECT CAST(SCOPE_IDENTITY() as int)";
             try
             {
                 var output = _sqlDataAccess.SaveData<ConnectionModel>(connectionModel, sql);
@@ -56,14 +58,14 @@ namespace DataManager.Processors
 
         public void Update(ConnectionModel connectionModel)
         {
-            const string sql = @"UPDATE [dbo].[Connection] WHERE 
-                                [Id]=@Id, 
+            const string sql = @"UPDATE [dbo].[Connection] SET 
                                 [FromId]=@FromId, 
                                 [ToId]=@ToId,
                                 [Weight]=@Weight, 
                                 [InnovationId]=@InnovationId, 
                                 [NetworkId]=@NetworkId, 
-                                [Enabled]=@Enabled";
+                                [Enabled]=@Enabled
+                                WHERE [Id]=@Id";
             _sqlDataAccess.UpdateData(sql, connectionModel);
         }
     }

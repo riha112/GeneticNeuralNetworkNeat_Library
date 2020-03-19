@@ -18,7 +18,7 @@ namespace DataManager.Processors
 
         public NodeModel Load(int id)
         {
-            const string sql = "SELECT * FROM [dbo].[Node] WHERE [Id]=@Id";
+            const string sql = "SELECT * FROM [dbo].[Node] WHERE [Id]=@Id ORDER BY [InnovationId]";
             var nodes = _sqlDataAccess.LoadDataWith<NodeModel>(sql, new { Id = id });
 
             // Element not found
@@ -30,13 +30,15 @@ namespace DataManager.Processors
 
         public List<NodeModel> LoadLinked(int networkId)
         {
-            const string sql = "SELECT * FROM [dbo].[Node] WHERE [NetworkId]=@NetworkId";
+            const string sql = "SELECT * FROM [dbo].[Node] WHERE [NetworkId]=@NetworkId ORDER BY [InnovationId]";
             return _sqlDataAccess.LoadDataWith<NodeModel>(sql, new {NetworkId = networkId});
         }
 
         public void Save(ref NodeModel nodeModel)
         {
-            const string sql = "INSERT INTO [dbo].[NODE] (NetworkId, InnovationId) Values (@NetworkId, @InnovationId)";
+            const string sql = @"INSERT INTO [dbo].[NODE] (NetworkId, InnovationId) 
+                                 Values (@NetworkId, @InnovationId);
+                                 SELECT CAST(SCOPE_IDENTITY() as int)";
             try
             {
                 var output = _sqlDataAccess.SaveData<NodeModel>(nodeModel, sql);
@@ -56,10 +58,10 @@ namespace DataManager.Processors
 
         public void Update(NodeModel nodeModel)
         {
-            const string sql =@"UPDATE [dbo].[Node] WHERE 
-                                [Id]=@Id, 
+            const string sql = @"UPDATE [dbo].[Node] SET 
                                 [NetworkId]=@NetworkId, 
-                                [InnovationId]=@InnovationId";
+                                [InnovationId]=@InnovationId
+                                WHERE [Id]=@Id";
             _sqlDataAccess.UpdateData(sql, nodeModel);
         }
     }

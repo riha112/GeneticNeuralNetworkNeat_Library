@@ -36,7 +36,9 @@ namespace DataManager.Processors
 
         public void Save(ref BatchModel batchModel)
         {
-            const string sql = "INSERT INTO [dbo].[Batch] (Name, Description, Generation) Values (@Name, @Description, @Generation)";
+            const string sql = @"INSERT INTO [dbo].[Batch] (Name, Description, Generation) 
+                                 VALUES (@Name, @Description, @Generation);
+                                 SELECT CAST(SCOPE_IDENTITY() as int)";
             try
             {
                 var output = _sqlDataAccess.SaveData<BatchModel>(batchModel, sql);
@@ -56,11 +58,11 @@ namespace DataManager.Processors
 
         public void Update(BatchModel batchModel)
         {
-            const string sql = @"UPDATE [dbo].[Batch] WHERE 
-                                [Id]=@Id, 
+            const string sql = @"UPDATE [dbo].[Batch] SET 
                                 [Name]=@FromId, 
                                 [Description]=@Description,
-                                [Generation]=@Generation";
+                                [Generation]=@Generation
+                                WHERE [Id]=@Id";
             _sqlDataAccess.UpdateData(sql, batchModel);
         }
     }

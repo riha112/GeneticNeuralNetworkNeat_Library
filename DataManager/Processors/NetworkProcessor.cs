@@ -20,7 +20,7 @@ namespace DataManager.Processors
 
         public NetModel Load(int id)
         {
-            const string sql = "SELECT * FROM [dbo].[NET] WHERE [Id]=@Id";
+            const string sql = "SELECT * FROM [dbo].[NET] WHERE [Id]=@Id AND [Enabled]=1";
             var networks = _sqlDataAccess.LoadDataWith<NetModel>(sql, new { Id = id });
 
             // Element not found
@@ -50,7 +50,7 @@ namespace DataManager.Processors
             //        return net;
             //    },  "NetworkId");
 
-            const string sql = @"SELECT * FROM [dbo].[NET] WHERE [BatchId]=@BatchId";
+            const string sql = @"SELECT * FROM [dbo].[NET] WHERE [BatchId]=@BatchId AND [Enabled]=1";
             var networks = _sqlDataAccess.LoadDataWith<NetModel>(sql, new {BatchId = batchId});
             foreach (var network in networks)
             {
@@ -63,7 +63,9 @@ namespace DataManager.Processors
 
         public void Save(ref NetModel netModel)
         {
-            const string sql = "INSERT INTO [dbo].[NET] (BirthGeneration, BatchId) Values (@BirthGeneration, @BatchId)";
+            const string sql = @"INSERT INTO [dbo].[NET] (BirthGeneration, BatchId) 
+                                 Values (@BirthGeneration, @BatchId);
+                                 SELECT CAST(SCOPE_IDENTITY() as int)";
             try
             {
                 var output = _sqlDataAccess.SaveData<NetModel>(netModel, sql);
@@ -83,11 +85,11 @@ namespace DataManager.Processors
 
         public void Update(NetModel netModel)
         {
-            const string sql = @"UPDATE [dbo].[NET] WHERE 
-                                [Id]=@Id, 
+            const string sql = @"UPDATE [dbo].[NET] SET
                                 [FitnessScore]=@NetworkId, 
                                 [BirthGeneration]=@InnovationId,
-                                [BatchId]=@BatchId";
+                                [BatchId]=@BatchId 
+                                WHERE [Id]=@Id";
             _sqlDataAccess.UpdateData(sql, netModel);
         }
     }
