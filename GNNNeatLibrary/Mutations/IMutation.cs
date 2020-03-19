@@ -11,6 +11,7 @@ namespace GNNNeatLibrary.Mutations
     {
         // Higher the weight then higher the possibility of selecting this mutation
         int GetWeight { get; set; }
+        int BatchId { get; set; }
 
         // Called when network is trying to evolve
         // its structure 

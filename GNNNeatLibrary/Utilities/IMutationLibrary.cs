@@ -7,5 +7,7 @@ namespace GNNNeatLibrary.Utilities
         IMutation GetMutation(int id);
         IMutation GetRandomMutation();
         IMutation GetRandomMutationBasedOnWeight();
+        IMutation GetRandomMutationBasedOnWeightAndBatch(int batchId);
+
     }
 }
