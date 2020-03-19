@@ -19,17 +19,17 @@ namespace DataManager.Utilities
             return output.ToList();
         }
 
-        public List<T> LoadDataWith<T>(string sql, object parameters)
+        public List<T> LoadDataWith<T>(string sql, object parameters, CommandType? type = null)
         {
             using IDbConnection cnn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
-            var output = cnn.Query<T>(sql, parameters);
+            var output = cnn.Query<T>(sql, parameters, commandType: type);
             return output.ToList();
         }
 
         public int SaveData<T>(T savable, string sql)
         {
             using IDbConnection cnn = new Microsoft.Data.SqlClient.SqlConnection(ConnectionString);
-            var output = cnn.Execute(sql, savable);
+            var output = cnn.Query<int>(sql, savable).Single();
             return output;
         }
 
