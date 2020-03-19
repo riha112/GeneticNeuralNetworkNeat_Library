@@ -3,7 +3,8 @@
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
     [FitnessScore] DECIMAL(18, 9) NOT NULL DEFAULT 0,
 	[BirthGeneration] INT NOT NULL DEFAULT 0,
-	[BatchId] INT NOT NULL, 
+	[BatchId] INT NOT NULL,
+	[Enabled] BIT NOT NULL DEFAULT 1,
     CONSTRAINT [FK_NET_Batch] FOREIGN KEY ([BatchId]) REFERENCES [Batch]([Id]),
 )
 
