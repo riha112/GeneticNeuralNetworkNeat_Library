@@ -10,6 +10,8 @@ namespace DataManager.Models
         public int FromId { get; set; }
         public int ToId { get; set; }
         public double Weight { get; set; }
+        public int NetworkId { get; set; }
+
         public int InnovationId { get; set; }
         public bool Enabled { get; set; }
     }

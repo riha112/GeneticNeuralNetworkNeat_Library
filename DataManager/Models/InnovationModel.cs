@@ -7,7 +7,8 @@ namespace DataManager.Models
     public enum InnovationType: short
     {
         Connection = 0,
-        Node = 1
+        Node = 1,
+        PresetNode = 2,
     }
 
     public class InnovationModel

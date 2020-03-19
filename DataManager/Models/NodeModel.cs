@@ -8,6 +8,7 @@ namespace DataManager.Models
     {
         public int Id { get; set; }
         public double Value { get; set; }
+        public int NetworkId { get; set; }
         public int InnovationId { get; set; }
     }
 }
