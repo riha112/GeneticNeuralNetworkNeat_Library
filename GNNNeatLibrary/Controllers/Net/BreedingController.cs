@@ -45,29 +45,37 @@ namespace GNNNeatLibrary.Controllers.Net
             // based on its innovations id.
             // We store connections id in table.
             var table = new int[2, range.max - range.min + 1];
+            for(var i = 0; i < 2; i++)
+                for (var x = 0; x < table.GetLength(1); x++)
+                    table[i, x] = -1;
+
             for (var p = 0; p < 2; p++)
             {
                 for (var c = 0; c < parents[p].Connections.Count; c++)
                 {
                     var column = parents[p].Connections[c].InnovationId - range.min;
                     // Father can go outside range.
-                    if (column < 0 || column >= table.GetLength(2))
+                    if (column < 0 || column >= table.GetLength(1))
                         continue;
 
                     table[p, column] = c;
                 }
             }
 
-            var child = _netController.New(family);
+            var child = _netController.New(family, false);
 
             // Populates child with connections
-            for (var c = 0; c < range.max - range.max + 1; c++)
+            for (var c = 0; c < range.max - range.min + 1; c++)
             {
                 // Disjoint on mother, thus we don't care about the connection 
-                if (table[0, c] == 0)
+                if (table[0, c] == -1)
                     continue;
 
-                if (table[0, c] != 0 && table[1, c] != 0)
+                // If both are empty skip
+                if (table[0, c] == -1 && table[1, c] == -1) 
+                    continue;
+
+                if (table[0, c] != -1 && table[1, c] != -1)
                 {
                     // Adds random connection to child
                     var parentId = rnd.Next(0, 2);
