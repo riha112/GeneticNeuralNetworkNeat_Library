@@ -4,6 +4,7 @@
 	[Name] NVARCHAR(32) NOT NULL,
 	[Description] NVARCHAR(MAX) NULL,
 	[Generation] INT NOT NULL DEFAULT 1,
+	[BestPerformingNetwork] INT NOT NULL DEFAULT 0,
 	[CreationDate] DATETIME2 NOT NULL DEFAULT getutcdate(),
 )
 

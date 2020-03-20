@@ -86,8 +86,8 @@ namespace DataManager.Processors
         public void Update(NetModel netModel)
         {
             const string sql = @"UPDATE [dbo].[NET] SET
-                                [FitnessScore]=@NetworkId, 
-                                [BirthGeneration]=@InnovationId,
+                                [FitnessScore]=@FitnessScore, 
+                                [Enabled]=@Enabled,
                                 [BatchId]=@BatchId 
                                 WHERE [Id]=@Id";
             _sqlDataAccess.UpdateData(sql, netModel);

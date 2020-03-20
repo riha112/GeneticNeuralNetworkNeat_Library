@@ -59,9 +59,10 @@ namespace DataManager.Processors
         public void Update(BatchModel batchModel)
         {
             const string sql = @"UPDATE [dbo].[Batch] SET 
-                                [Name]=@FromId, 
+                                [Name]=@Name, 
                                 [Description]=@Description,
-                                [Generation]=@Generation
+                                [Generation]=@Generation,
+                                [BestPerformingNetwork]=@BestPerformingNetwork
                                 WHERE [Id]=@Id";
             _sqlDataAccess.UpdateData(sql, batchModel);
         }

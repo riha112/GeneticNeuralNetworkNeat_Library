@@ -15,6 +15,8 @@ namespace DataManager.Models
         public string Description { get; set; }
         public int Generation { get; set; }
 
+        public int BestPerformingNetwork { get; set; }
+
         public DateTime CreationDate { get; set; }
 
         public List<NetModel> Networks { get; set; } = new List<NetModel>();
