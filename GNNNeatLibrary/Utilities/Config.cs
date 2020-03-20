@@ -13,7 +13,7 @@ namespace GNNNeatLibrary.Utilities
         public static double MinimumFitnessScore { get; set; } = 0;
         public static double KeepPerSpecies { get; set; } = 0.2;
 
-        public static uint NetworkCountPerPopulation { get; set; } = 10;
+        public static uint NetworkCountPerPopulation { get; set; } = 50;
 
         public static int AddRandomConnectionMutationsOnStartMin { get; set; } = 4;
         public static int AddRandomConnectionMutationsOnStartMax { get; set; } = 9;
