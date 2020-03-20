@@ -8,7 +8,7 @@ using DataManager.Utilities;
 using GNNNeatLibrary.Controllers;
 using GNNNeatLibrary.Controllers.Innovations;
 using GNNNeatLibrary.Utilities;
-using TicTacToeManager.Training;
+using TicTacToeManager.Controllers;
 
 namespace TicTacToeConsoleUI
 {
@@ -47,7 +47,8 @@ namespace TicTacToeConsoleUI
             builder.RegisterType<BatchController>().As<IBatchController>();
             builder.RegisterType<GnnController>().As<IGnnController>();
 
-            builder.RegisterType<GameTrainer>().As<IGameTrainer>();
+            //builder.RegisterType<GameTrainer>().As<IGameTrainer>();
+            builder.RegisterType<TrainingController>().As<ITrainingController>();
 
 
             return builder.Build();
