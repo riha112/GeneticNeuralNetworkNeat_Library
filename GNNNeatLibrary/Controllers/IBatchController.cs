@@ -6,7 +6,9 @@ namespace GNNNeatLibrary.Controllers
     {
         BatchModel New(string name, string description = "");
         BatchModel Load(int id);
-        void Kill(ref BatchModel target);
-        void Save(ref BatchModel target);
+        void UpdateBestPerformingNetwork(BatchModel batchModel);
+        void IncreaseGeneration(BatchModel batchModel);
+        void Kill(BatchModel target);
+        void Save(BatchModel target);
     }
 }

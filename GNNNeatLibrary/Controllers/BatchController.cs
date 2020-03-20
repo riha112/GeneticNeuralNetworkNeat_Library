@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DataManager.Models;
 using DataManager.Processors;
@@ -52,6 +53,19 @@ namespace GNNNeatLibrary.Controllers
             }
         }
 
+        public void IncreaseGeneration(BatchModel batchModel)
+        {
+            batchModel.Generation++;
+            Save(batchModel);
+        }
+
+        public void UpdateBestPerformingNetwork(BatchModel batchModel)
+        {
+            batchModel.BestPerformingNetwork =
+                batchModel.Networks.OrderByDescending(n => n.FitnessScore).First().Id;
+            Save(batchModel);
+        }
+
         private void InitializeGenOneNetworks(ref BatchModel batchModel)
         {
             for (var i = 0; i < Config.NetworkCountPerPopulation; i++)
@@ -66,13 +80,13 @@ namespace GNNNeatLibrary.Controllers
            return _batchProcessor.Load(id);
         }
 
-        public void Kill(ref BatchModel target)
+        public void Kill(BatchModel target)
         {
             _ = target ?? throw new NullReferenceException();
             _batchProcessor.Delete(target.Id);
         }
 
-        public void Save(ref BatchModel target)
+        public void Save(BatchModel target)
         {
             _ = target ?? throw new NullReferenceException();
             _batchProcessor.Update(target);
