@@ -6,7 +6,7 @@ namespace GNNNeatLibrary.Controllers.Net
     {
         double[] GetOutputValues(NetModel target);
 
-        void FeedForward(NetModel target, double[] input);
+        bool FeedForward(NetModel target, double[] input);
 
         /// <summary>
         /// Finds networks innovation ranges min max

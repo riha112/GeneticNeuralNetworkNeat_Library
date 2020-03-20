@@ -15,7 +15,7 @@ namespace GNNNeatLibrary.Controllers.Net
         public NetController(INetworkProcessor networkProcessor, INodeProcessor nodeProcessor, IConnectionProcessor connectionProcessor, IMutationController mutationController) =>
             (_networkProcessor, _nodeProcessor, _connectionProcessor, _mutationController) = (networkProcessor, nodeProcessor, connectionProcessor, mutationController);
 
-        public NetModel New(BatchModel parenBatchModel)
+        public NetModel New(BatchModel parenBatchModel, bool addRandom = true)
         {
             var model = new NetModel
             {
@@ -37,11 +37,14 @@ namespace GNNNeatLibrary.Controllers.Net
             }
 
             // Adds random connections
-            var rnd = new Random();
-            var addMutationCount = rnd.Next(Config.AddRandomConnectionMutationsOnStartMin,
-                Config.AddRandomConnectionMutationsOnStartMax);
-            for(var i = 0; i < addMutationCount; i++)
-                _mutationController.MutateWithSpecific(ref model, 1);
+            if (addRandom)
+            {
+                var rnd = new Random();
+                var addMutationCount = rnd.Next(Config.AddRandomConnectionMutationsOnStartMin,
+                    Config.AddRandomConnectionMutationsOnStartMax);
+                for(var i = 0; i < addMutationCount; i++)
+                    _mutationController.MutateWithSpecific(ref model, 1);
+            }
 
             return model;
         }

@@ -1,4 +1,5 @@
 ﻿using DataManager.Models;
+using DataManager.Processors;
 using GNNNeatLibrary.Utilities;
 
 namespace GNNNeatLibrary.Controllers.Net
@@ -18,15 +19,12 @@ namespace GNNNeatLibrary.Controllers.Net
         {
             var mutation = _mutationLibrary.GetRandomMutationBasedOnWeight();
             mutation?.ApplyMutation(ref target);
-            // TODO: Test if mutation didn't break the network
         }
 
         public void MutateWithBatch(ref NetModel target, int batchId)
         {
             var mutation = _mutationLibrary.GetRandomMutationBasedOnWeightAndBatch(batchId);
             mutation?.ApplyMutation(ref target);
-            // TODO: Test if mutation didn't break the network
-            // if(broken(target)) then delete(target) and target = _netController.New(batchid)
         }
 
         public void MutateWithSpecific(ref NetModel target, int id)

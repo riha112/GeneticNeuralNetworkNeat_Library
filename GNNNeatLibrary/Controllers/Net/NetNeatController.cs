@@ -18,7 +18,7 @@ namespace GNNNeatLibrary.Controllers.Net
             return output;
         }
 
-        public void FeedForward(NetModel target, double[] input)
+        public bool FeedForward(NetModel target, double[] input)
         {
             // In network model input layer and output layers are stored in sequence
             // Example for 3in and 1out: List<Nodes>[in, in, in, out, hid, hid, hid ..]
@@ -54,7 +54,14 @@ namespace GNNNeatLibrary.Controllers.Net
             {
                 runCount++;
                 currentLayersNodes = UpdateLayerAndGetNext(ref target, currentLayersNodes, runCount == 1);
-            } while (currentLayersNodes.Count != 0 && runCount < target.Connections.Count);
+
+                if(runCount > target.Connections.Count + 1)
+                    return false;
+
+            } while (currentLayersNodes.Count != 0);
+
+            return true;
+
             #endregion
         }
 
