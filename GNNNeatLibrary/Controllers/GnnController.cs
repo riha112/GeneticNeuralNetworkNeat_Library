@@ -182,6 +182,8 @@ namespace GNNNeatLibrary.Controllers
                 // Orders
                 child.Connections = child.Connections.OrderBy(c => c.InnovationId).ToList();
                 child.Nodes = child.Nodes.OrderBy(n => n.InnovationId).ToList();
+                child.Enabled = true;
+                _netController.Save(child);
                 gnnModel.UnsignedNetworks.Add(child);
             }
             #endregion

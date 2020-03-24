@@ -109,7 +109,8 @@ namespace TicTacToeManager.Controllers
         /// </summary>
         private double[] GridToVector()
         {
-            var output = new double[9];
+            var output = new double[10];
+            output[9] = 1;
 
             for (var y = 0; y < 3; y++)
             {
@@ -117,9 +118,9 @@ namespace TicTacToeManager.Controllers
                 {
                     output[y * 3 + x] = Grid[x, y] switch
                     {
-                        1 => 0.7,
-                        -1 => -0.7,
-                        _ => 0.95
+                        1 => 1,
+                        -1 => -1,
+                        _ => 0.1
                     };
                 }
             }
